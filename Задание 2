@@ -24,7 +24,7 @@ y_max = 1
 
 # Вычисляем площадь
 area = monte_carlo_area(f, x_min, x_max, y_min, y_max)
-print("Приближённая площадь фигуры:", area)
+print("Estimated area of the figure:", area)
 
 # Визуализация
 num_points = 10000
@@ -46,11 +46,11 @@ plt.plot(np.linspace(x_min, x_max, 100), f(np.linspace(x_min, x_max, 100)), colo
 inside_x, inside_y = zip(*points_inside) if points_inside else ([], [])
 outside_x, outside_y = zip(*points_outside) if points_outside else ([], [])
 
-plt.scatter(inside_x, inside_y, color='green', s=1, label='Точки внутри')
-plt.scatter(outside_x, outside_y, color='red', s=1, label='Точки вне')
+plt.scatter(inside_x, inside_y, color='green', s=1, label='Points inside')
+plt.scatter(outside_x, outside_y, color='red', s=1, label='Points outside')
 plt.xlim(x_min - 0.1, x_max + 0.1)
 plt.ylim(y_min - 0.1, y_max + 0.1)
-plt.title('Метод Монте-Карло для оценки площади под графиком sin(x)')
+plt.title('Monte Carlo Method for Estimating Area Under sin(x)')
 plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
