@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def monte_carlo_area(f, x_min, x_max, y_min, y_max, num_points=10000):
+    count_inside = 0
+    
+    for _ in range(num_points):
+        x = np.random.uniform(x_min, x_max)
+        y = np.random.uniform(y_min, y_max)
+        
+        if y <= f(x):
+            count_inside += 1
+            
+    return (count_inside / num_points) * (x_max - x_min) * (y_max - y_min)
+
+def f(x):
+    return np.sin(x)
+
+# Определяем границы интегрирования
+x_min = 0
+x_max = np.pi
+y_min = 0
+y_max = 1
+
+# Истинное значение площади под кривой
+true_area = 2  # Площадь под синусом от 0 до π
+
+# Количество случайных точек для тестирования
+num_points_list = [1000, 5000, 10000]
+errors = []
+
+# Вычисляем площадь и ошибку для разных количеств точек
+for num_points in num_points_list:
+    estimated_area = monte_carlo_area(f, x_min, x_max, y_min, y_max, num_points)
+    error = abs(estimated_area - true_area)
+    errors.append(error)
+    print(f"Estimated area with {num_points} points: {estimated_area}, Error: {error}")
+
+# Построение графика зависимости ошибки от количества точек
+plt.plot(num_points_list, errors, marker='o')
+plt.title('Error in Area Estimation vs Number of Random Points')
+plt.xlabel('Number of Random Points')
+plt.ylabel('Error in Area Estimation')
+plt.xscale('log')  # Логарифмическая шкала для оси X
+plt.grid()
+plt.show()
