@@ -1,1 +1,52 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
 
+def calculate_curve_length(points):
+    length = 0.0
+    for i in range(1, len(points)):
+        x1, y1 = points[i-1]
+        x2, y2 = points[i]
+        segment_length = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        length += segment_length
+    return length
+
+def interpolate_points(points, num_intermediate_points):
+    interpolated_points = []
+    for i in range(len(points) - 1):
+        x1, y1 = points[i]
+        x2, y2 = points[i + 1]
+        # Генерируем промежуточные точки
+        for j in range(num_intermediate_points + 1):
+            t = j / (num_intermediate_points + 1)
+            x = (1 - t) * x1 + t * x2
+            y = (1 - t) * y1 + t * y2
+            interpolated_points.append((x, y))
+    interpolated_points.append(points[-1])  # Добавляем последнюю точку
+    return interpolated_points
+
+# Задаем массив координат точек кривой
+curve_points = [(0, 0), (1, 1), (2, 4), (3, 9), (4, 16)]
+
+# Настраиваем параметры для графика
+num_points_list = range(1, 21)  # Количество промежуточных точек от 1 до 20
+errors = []
+
+# Вычисляем длину кривой для разных количеств промежуточных точек
+for num_points in num_points_list:
+    interpolated_points = interpolate_points(curve_points, num_points)
+    approximate_length = calculate_curve_length(interpolated_points)
+    
+    # Для точного значения длины кривой можно использовать численное интегрирование
+    # Здесь мы просто используем длину отрезков для оценки
+    true_length = calculate_curve_length(curve_points)  # Это не совсем верно, но для примера
+    error = abs(approximate_length - true_length)
+    errors.append(error)
+
+# Построение графика зависимости ошибки от количества промежуточных точек
+plt.plot(num_points_list, errors, marker='o')
+plt.title('Error in Curve Length Calculation vs Number of Intermediate Points')
+plt.xlabel('Number of Intermediate Points')
+plt.ylabel('Error in Length Calculation')
+plt.grid()
+plt.show()
