@@ -1,0 +1,57 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def monte_carlo_area(f, x_min, x_max, y_min, y_max, num_points=10000):
+    count_inside = 0
+    
+    for _ in range(num_points):
+        x = np.random.uniform(x_min, x_max)
+        y = np.random.uniform(y_min, y_max)
+        
+        if y <= f(x):
+            count_inside += 1
+            
+    return (count_inside / num_points) * (x_max - x_min) * (y_max - y_min)
+
+def f(x):
+    return np.sin(x)
+
+# Определяем границы интегрирования
+x_min = 0
+x_max = np.pi
+y_min = 0
+y_max = 1
+
+# Вычисляем площадь
+area = monte_carlo_area(f, x_min, x_max, y_min, y_max)
+print("Приближённая площадь фигуры:", area)
+
+# Визуализация
+num_points = 10000
+points_inside = []
+points_outside = []
+
+for _ in range(num_points):
+    x = np.random.uniform(x_min, x_max)
+    y = np.random.uniform(y_min, y_max)
+    
+    if y <= f(x):
+        points_inside.append((x, y))
+    else:
+        points_outside.append((x, y))
+
+# Отображаем график
+plt.figure(figsize=(8, 4))
+plt.plot(np.linspace(x_min, x_max, 100), f(np.linspace(x_min, x_max, 100)), color='blue', label='f(x) = sin(x)')
+inside_x, inside_y = zip(*points_inside) if points_inside else ([], [])
+outside_x, outside_y = zip(*points_outside) if points_outside else ([], [])
+
+plt.scatter(inside_x, inside_y, color='green', s=1, label='Точки внутри')
+plt.scatter(outside_x, outside_y, color='red', s=1, label='Точки вне')
+plt.xlim(x_min - 0.1, x_max + 0.1)
+plt.ylim(y_min - 0.1, y_max + 0.1)
+plt.title('Метод Монте-Карло для оценки площади под графиком sin(x)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
